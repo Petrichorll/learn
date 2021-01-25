@@ -1,0 +1,9 @@
+http://x99.gemfield.org:37030/#/login
+http://ai5.gemfield.org/#/login
+http://192.168.0.180:3000/#/login
+http://192.168.0.180:3000/#/login
+http://192.168.1.127:9528/#/login?redirect=%2Fupload-file
+http://192.168.1.126:5000/#/login?redirect=%2Fupload-file
+http://192.168.0.180:3002/#/login?redirect=%2Fupload-file
+http://192.168.1.119:5000/#/login?redirect=%2Fupload-file
+http://ai5.gemfield.org/#/login?redirect=%2Fupload-file
