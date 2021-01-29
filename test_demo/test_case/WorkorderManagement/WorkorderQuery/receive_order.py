@@ -14,8 +14,8 @@ sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\public")
 sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case\\AuditContent\\UploadFiles")
 sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case")
 sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case\\AuditContent\\FindingsAudit")
-# sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case\\WorkorderManagement\\WorkorderQuery")
-import login, user_add, workxls, upload_files, workorder, machine_audit_results, workxlsx, workorder_query, website_tips
+sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case\\WorkorderManagement\\MyOrder")
+import login, user_add, workxls, upload_files, workorder, machine_audit_results, workxlsx, workorder_query, website_tips,myorder_query
 from selenium.webdriver.common.action_chains import ActionChains
 
 
@@ -313,6 +313,54 @@ class Receive_Work_Order(unittest.TestCase):
             if (j == 21):
                 break
         return ret_list
+
+    @staticmethod
+    def ReceiveOrders(driver, conut):  # 领取前conut个工单
+        # 记录当前操作人,可以去login里面写函数
+        name = "组织A角色1"
+        pass
+        driver = workorder_query.Work_Order_Query.OpenOrderQuery(driver)  # 打开工单查询页面
+        time.sleep(1)
+        i = 0
+        imf = []
+        while (i < conut):
+            i = i + 1
+            oneimf = []
+            # 记录信息到imf--当前负责人，工单状态，文件来源。
+            oneimf.append(name)
+            oneimf.append(
+                driver.find_element_by_xpath(myorder_query.MyOrder_Query.dataxpath.format(i, 7)).text)
+            oneimf.append(
+                driver.find_element_by_xpath(myorder_query.MyOrder_Query.dataxpath.format(i, 5)).text)
+            # 勾选
+            driver.find_element_by_xpath(Receive_Work_Order.checkbox_xpath.format(i)).click()
+            time.sleep(0.2)
+            imf.append(oneimf)
+
+        driver.find_element_by_xpath(Receive_Work_Order.robox_button_xpath).click()  # 点击确定领取按钮
+        time.sleep(0.2)  # 预留时间查看
+        driver.find_element_by_xpath(Receive_Work_Order.ro_confirm_button_xpath).click()  # 点击确定，领取成功
+        # 记录时间
+        timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+        # 将imf和timestr修改进excle
+        i = 0
+        for oneimf in imf:
+            i = i + 1
+            wod = workxls.getallimf('workorderdata.xls', i)
+            wod.workorder_operationtime = timestr
+            wod.workorder_inchargeperson = oneimf[0]
+            if (oneimf[1] == "机器审核完成"):
+                wod.workorder_orderstate = "一级审核中"
+            elif (oneimf[1] == "一级审核完成"):
+                wod.workorder_orderstate = "二级审核中"
+            else:
+                pass
+            wod.workorder_documentssource = oneimf[2]
+
+            workxls.changeimf('workorderdata.xls', i, wod)
+
+        return driver
 
     def tearDown(self):
         self.driver.quit()

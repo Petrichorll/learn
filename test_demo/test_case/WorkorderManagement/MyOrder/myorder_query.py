@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 工单查询
+# 我的工单-查询
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -13,28 +13,29 @@ sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\public")
 sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case\\AuditContent\\UploadFiles")
 sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case")
 sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case\\AuditContent\\FindingsAudit")
-import login, user_add, workxls, upload_files, workorder, machine_audit_results, workxlsx
+sys.path.append(r"C:\\Users\\19144\\PycharmProjects\\学习\\test_demo\\test_case\\WorkorderManagement\\WorkorderQuery")
+import login, user_add, workxls, upload_files, workorder, machine_audit_results, workxlsx, receive_order
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-# 工单管理
-class Work_Order_Query(unittest.TestCase):
+# 我的工单-查询
+class MyOrder_Query(unittest.TestCase):
     workorder_management_xpath = "/html/body/div/div/div[1]/div[2]/div[1]/div/ul[1]/div[2]/li/div/span"  # 菜单栏-一级菜单-工单管理按钮的xpath
-    order_ouery_xpath = "/html/body/div/div/div[1]/div[2]/div[1]/div/ul[1]/div[2]/li/ul/div[1]/a/li/span"  # 菜单栏-二级菜单-工单查询按钮的xpath
-    dataxpath = "/html/body/div/div/div[2]/section/section/div/div/div/div/div[3]/div[3]/table/tbody/tr[{}]/td[{}]/div"  # 工单查询内容的xpath
+    myorder_xpath = "/html/body/div/div/div[1]/div[2]/div[1]/div/ul[1]/div[2]/li/ul/div[2]/a/li/span"  # 菜单栏-二级菜单-我的工单按钮的xpath
+    dataxpath = "/html/body/div/div/div[2]/section/section/div/div/div/div/div[3]/div[3]/table/tbody/tr[{}]/td[{}]/div"  # 我的工单内容的xpath
 
-    order_details_xpath = "/html/body/div/div/div[2]/section/section/div/div/div/div/div[3]/div[4]/div[2]/table/tbody/tr[{}]/td[11]/div/a/span"  # 详情按钮的xpath
+    # order_details_xpath = "/html/body/div/div/div[2]/section/section/div/div/div/div/div[3]/div[4]/div[2]/table/tbody/tr[{}]/td[11]/div/a/span"  # 详情按钮的xpath
     nextpage_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[4]/div/button[2]"  # 下一页按钮的xpath
 
-    details_orderid_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[1]/div[1]/span[2]"  # 详情页工单ID的xpath
-    details_auditlog_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[1]/div[2]/div/p[1]/span[{}]"  # 详情页审核日志xpath
-    details_back_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[2]/button"  # 详情页面的返回按钮
-
-    ordetype_sdp_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[3]/div[2]/table/thead/tr/th[{}]/div/div/i"  # 筛选列下拉框
-    option_xpath = "/html/body/ul[{}]/li[{}]"
-
-    search_input_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/input"
-    search_button_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/span/span/i"
+    # details_orderid_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[1]/div[1]/span[2]"  # 详情页工单ID的xpath
+    # details_auditlog_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[1]/div[2]/div/p[1]/span[{}]"  # 详情页审核日志xpath
+    # details_back_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[2]/button"  # 详情页面的返回按钮
+    #
+    # ordetype_sdp_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[3]/div[2]/table/thead/tr/th[{}]/div/div/i"  # 筛选列下拉框
+    # option_xpath = "/html/body/ul[{}]/li[{}]"
+    #
+    # search_input_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/input"
+    # search_button_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/span/span/i"
 
     def setUp(self):
         self.driver = login.Login_CAS.login()
@@ -42,51 +43,61 @@ class Work_Order_Query(unittest.TestCase):
         self.verificationErrors = []
         self.accept_next_alert = True
 
-    # 工单查询用例
-    def test_Work_Order_Query(self):
+    # 我的工单-查询用例
+    def test_MyOrder_Query(self):
         driver = self.driver
-        # 打开工单查询页面
-        driver = Work_Order_Query.OpenOrderQuery(driver)
+        # 打开我的工单页面
+        driver = MyOrder_Query.OpenMyOrderQuery(driver)
         # 记录第一条工单的工单id
-        befor_first_order_id = Work_Order_Query.GetOderID(driver, 1)
+        befor_first_order_id = MyOrder_Query.GetOderID(driver, 1)
         print(befor_first_order_id)
         time.sleep(1)
         # 上传3张工单,并记录到orkorderdata.xls
         count = 3
         driver = machine_audit_results.Machine_Audit_Results.UploadOrederAndWrite(driver, count)
-        # 打开工单查询页面
-        driver = Work_Order_Query.OpenOrderQuery(driver)
+        # 到工单查询页面，领取这3张工单。
+        driver = receive_order.Receive_Work_Order.ReceiveOrders(driver, count)
+        # 重新打开我的工单页面
+        driver = MyOrder_Query.OpenMyOrderQuery(driver)
         # 读取orkorderdata.xls的数据，和页面查询的比对
         i = 1
         while (i <= count):
             data2 = []
-            data1 = workxls.getimf('workorderdata.xls', i - 1)
-            data2.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 2)).text)
-            data2.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 4)).text)
-            data2.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 5)).text)
-            data2.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 7)).text)
-            data2.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 8)).text)
-            data2.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 10)).text)
+            data1 = workxls.getimf('workorderdata.xls', count - i)
+            print(data1)
+            time.sleep(0.2)
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 2)).text)  # 工单ID
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 4)).text)  # 工单类型
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 5)).text)  # 工单来源
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 6)).text)  # 当前负责人
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 7)).text)  # 工单状态
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 8)).text)  # AI审核结果
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 9)).text)  # 人工审核结果
+            data2.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 10)).text)  # 操作时间
             if (data2[0] != data1[3]):
                 raise AssertionError('\n工单查询的工单ID\"{}\"和本地excle记录里的工单ID\"{}\"不一致！'.format(data2[0], data1[3]))
             if (data2[1] != data1[1]):
                 raise AssertionError('\n工单查询的工单类型\"{}\"和本地excle记录里的工单类型\"{}\"不一致！'.format(data2[0], data1[1]))
-            if (data2[2] != "默认"):
-                raise AssertionError('\n工单查询的工单来源不为：默认！'.format(data2[0], data1[3]))
-            if (data2[3] != "机器审核完成"):
-                raise AssertionError('\n工单查询的工单机审状态不是机器审核完成!')
-            if (data2[4] != data1[4]):
-                raise AssertionError('\n工单查询的工单机审结果\"{}\"和本地excle记录里的工单机审结果\"{}\"不一致！'.format(data2[0], data1[4]))
-            if (data2[5] != data1[2]):  # 检查操作时间，秒数相差忽略
-                if (abs(int(data2[5][-1]) - int(data1[2][-1])) < 3):
-                    if (int(data2[5][-1]) != 9 and int(data1[2][-1]) != 9):
-                        raise AssertionError('\n工单查询的操作时间\"{}\"和本地excle记录里的操作时间\"{}\"不一致！'.format(data2[5], data1[2]))
+            if (data2[2] != data1[9]):
+                raise AssertionError('\n工单查询的工单来源\"{}\"和本地excle记录里的工单来源\"{}\"不一致！'.format(data2[2], data1[9]))
+            if (data2[3] != data1[7]):
+                raise AssertionError('\n工单查询的工单当前负责人\"{}\"和本地excle记录里的工单当前负责人\"{}\"不一致！'.format(data2[3], data1[7]))
+            if (data2[4] != data1[8]):
+                raise AssertionError('\n工单查询的工单状态\"{}\"和本地excle记录里的工单状态\"{}\"不一致！'.format(data2[4], data1[8]))
+            if (data2[5] != data1[4]):
+                raise AssertionError('\n工单查询的工单机审结果\"{}\"和本地excle记录里的工单机审结果\"{}\"不一致！'.format(data2[5], data1[4]))
+            if (data2[6] != data1[5]):
+                raise AssertionError('\n工单查询的工单人审结果\"{}\"和本地excle记录里的工单人审结果\"{}\"不一致！'.format(data2[6], data1[5]))
+            if (data2[7] != data1[2]):  # 检查操作时间，秒数相差忽略
+                if (abs(int(data2[7][-1]) - int(data1[2][-1])) < 3):
+                    if (int(data2[7][-1]) != 9 and int(data1[2][-1]) != 9):
+                        raise AssertionError('\n工单查询的操作时间\"{}\"和本地excle记录里的操作时间\"{}\"不一致！'.format(data2[7], data1[2]))
             # 更新一下操作时间
-            workxls.changetime('workorderdata.xls', i, data2[5])
+            workxls.changetime('workorderdata.xls', count - i + 1, data2[7])
             i = i + 1
             # print(data1, "\n", data2)
         # 检查一下本次上传的个数
-        driver = Work_Order_Query.CheckOrderConut(driver, befor_first_order_id, i)
+        # driver = Work_Order_Query.CheckOrderConut(driver, befor_first_order_id, i)
         time.sleep(1)
 
         driver.close()
@@ -145,26 +156,26 @@ class Work_Order_Query(unittest.TestCase):
 
         driver.close()
 
-    # 工单查询排序检查用例
+    # 我的工单-查询排序检查用例
     def test_Work_Order_Query_Sort(self):
         driver = self.driver
-        # 打开工单查询页面
-        driver = Work_Order_Query.OpenOrderQuery(driver)
+        # 打开我的工单页面
+        driver = MyOrder_Query.OpenMyOrderQuery(driver)
         time.sleep(1)
         i = 2
         while (i):
-            timestr1 = driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i - 1, 10)).text
+            timestr1 = driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i - 1, 10)).text
             if (i == 11):
-                next_button_str = driver.find_element_by_xpath(Work_Order_Query.nextpage_xpath).get_attribute(
+                next_button_str = driver.find_element_by_xpath(MyOrder_Query.nextpage_xpath).get_attribute(
                     'outerHTML')
                 if (re.search('disabled="disabled"', next_button_str)):
                     break
-                driver.find_element_by_xpath(Work_Order_Query.nextpage_xpath).click()
+                driver.find_element_by_xpath(MyOrder_Query.nextpage_xpath).click()
                 time.sleep(1)
                 i = 1
             try:
                 self.driver.implicitly_wait(1)
-                timestr2 = driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 10)).text
+                timestr2 = driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 10)).text
                 self.driver.implicitly_wait(30)
             except:
                 self.driver.implicitly_wait(30)
@@ -172,21 +183,21 @@ class Work_Order_Query(unittest.TestCase):
             print(timestr1, timestr2)
             if (timestr1 < timestr2):
                 if (i == 1):
-                    orderID1 = driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(10, 2)).text
+                    orderID1 = driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(10, 2)).text
                 else:
-                    orderID1 = driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i - 1, 2)).text
-                orderID2 = driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 2)).text
+                    orderID1 = driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i - 1, 2)).text
+                orderID2 = driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 2)).text
                 raise AssertionError(
                     '\n工单ID：{} 的操作时间\"{}\"和工单ID：{} 的操作时间\"{}\"排序不对！'.format(orderID1, timestr1, orderID2, timestr2))
             i = i + 1
 
         driver.close()
 
-    # 工单查询搜索框检查用例
+    # 我的工单查询搜索框检查用例
     def test_Work_Order_Query_Seek(self):
         driver = self.driver
-        # 打开工单查询页面
-        driver = Work_Order_Query.OpenOrderQuery(driver)
+        # 打开我的工单页面
+        driver = MyOrder_Query.OpenMyOrderQuery(driver)
         time.sleep(1)
         # 遍历工单查询列表，把查到的工单ID、工单类型、文件来源、工单状态、AI审核结果、人工审核结果填入screen_elements_list
         screen_elements_list = Work_Order_Query.TraverseList(driver, 1)
@@ -314,17 +325,17 @@ class Work_Order_Query(unittest.TestCase):
         return driver
 
     @staticmethod
-    def OpenOrderQuery(driver):  # 打开工单查询页面
+    def OpenMyOrderQuery(driver):  # 打开工单查询页面
         time.sleep(1)
         # 点击菜单栏工单查询
         try:
             driver.implicitly_wait(1)
-            driver.find_element_by_xpath(Work_Order_Query.order_ouery_xpath).click()
+            driver.find_element_by_xpath(MyOrder_Query.myorder_xpath).click()
             time.sleep(1)
         except:
-            driver.find_element_by_xpath(Work_Order_Query.workorder_management_xpath).click()
+            driver.find_element_by_xpath(MyOrder_Query.workorder_management_xpath).click()
             time.sleep(1)
-            driver.find_element_by_xpath(Work_Order_Query.order_ouery_xpath).click()
+            driver.find_element_by_xpath(MyOrder_Query.myorder_xpath).click()
             time.sleep(1)
         finally:
             driver.implicitly_wait(30)
@@ -335,25 +346,13 @@ class Work_Order_Query(unittest.TestCase):
         time.sleep(1)
         try:
             driver.implicitly_wait(1)
-            order_id = driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(tr, 2)).text
+            order_id = driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(tr, 2)).text
         except:
             order_id = "nothing"
         finally:
             driver.implicitly_wait(30)
 
         return order_id
-
-    @staticmethod
-    def CheckOrderConut(driver, befor_first_order_id, conut):
-        order_id = driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(conut, 2)).text
-        if (befor_first_order_id == "nothing"):
-            pass  # 统计tr个数，和count比较
-        elif (befor_first_order_id != order_id):
-            raise AssertionError('\n工单查询的工单个数不正确')
-        else:
-            pass  # 检查通过
-
-        return driver
 
     @staticmethod
     def TraverseList(driver, personincharge=0):  # 遍历列表，返回查到元素的一个二维数组,personincharge参数表示是否把负责人这一列加入返回列表

@@ -108,8 +108,67 @@ def changetime(xlsname, gnrows, timestr):  # 修改第三列操作时间，gnrow
     data1.save(filename + xlsname)
 
 
+def getallimf(xlsname, gnrows):
+    data = xlrd.open_workbook(filename + xlsname)
+    table = data.sheets()[0]
+    wod = workorder.WorkOrder()
+    ret = table.row_values(gnrows - 1, start_colx=0, end_colx=None)
+    i = 0
+    while (i < len(ret)):
+        if (ret[i] != "" and i == 0):
+            wod.workorder_filename = ret[i]
+        if (ret[i] != "" and i == 1):
+            wod.workorder_type = ret[i]
+        if (ret[i] != "" and i == 2):
+            wod.workorder_operationtime = ret[i]
+        if (ret[i] != "" and i == 3):
+            wod.workorder_id = ret[i]
+        if (ret[i] != "" and i == 4):
+            wod.workorder_machineauditresults = ret[i]
+        if (ret[i] != "" and i == 5):
+            wod.workorder_manualauditresults = ret[i]
+        if (ret[i] != "" and i == 6):
+            wod.workorder_illegallabel = ret[i]
+        if (ret[i] != "" and i == 7):
+            wod.workorder_inchargeperson = ret[i]
+        if (ret[i] != "" and i == 8):
+            wod.workorder_orderstate = ret[i]
+        if (ret[i] != "" and i == 9):
+            wod.workorder_documentssource = ret[i]
+        i = i + 1
+
+    return wod
+
+
+def changeimf(xlsname, gnrows, wod):  # 修改内容，gnrows表示行数:[1,max]
+    data = xlrd.open_workbook(filename + xlsname)
+    worksheet = data.sheets()[0]
+    nrows = worksheet.nrows
+    ncols = worksheet.ncols
+
+    data1 = xlwt.Workbook(filename + xlsname)
+    worksheet1 = data1.add_sheet('My Worksheet')
+    newrowlist = wod.getmemberslist()
+    while (nrows):
+        hh = worksheet.row_values(nrows - 1, start_colx=0, end_colx=None)
+
+        for i in range(ncols):
+            if (nrows == gnrows):
+                worksheet1.write(nrows - 1, i, newrowlist[i])
+                continue
+            worksheet1.write(nrows - 1, i, hh[i])
+
+        nrows = nrows - 1
+
+    for i in range(0, ncols):
+        worksheet1.col(i).width = 6333
+    data1.save(filename + xlsname)
+
+
 if __name__ == "__main__":
-    #('workorderdata1.xls', 2, "2020-11-22 11:22:33")
+    # ('workorderdata1.xls', 2, "2020-11-22 11:22:33")
     # wod=workorder.WorkOrder(id="333", machineauditresults="444", illegallabel="555")
     # additionaldata1('workorderdata2.xlsx', 1, wod)
-    print(abs(2-3))
+    wod = getallimf('workorderdata.xls', 1)
+    changeimf('workorderdata.xls', 8, wod)
+    #wod.printallmembers()
