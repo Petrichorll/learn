@@ -39,6 +39,7 @@ def cleandata(xlsxname):
 
 
 # 筛选xlsxname里面的数据，返回筛选后的结果，一个二维数组
+# 适用于工单查询界面，和上一个不一样
 def ScreenData(xlsxname, *args):
     pd.set_option("display.unicode.ambiguous_as_wide", True)
     pd.set_option("display.unicode.east_asian_width", True)
@@ -52,6 +53,35 @@ def ScreenData(xlsxname, *args):
             dataframe = dataframe[(dataframe.文件来源 == conditionstr)]
         elif (
                 conditionstr == "待审核" or conditionstr == "机器审核完成" or conditionstr == "一级审核完成" or conditionstr == "二级审核完成"):
+            dataframe = dataframe[(dataframe.工单状态 == conditionstr)]
+        elif (conditionstr == "通过" or conditionstr == "不通过"):
+            dataframe = dataframe[(dataframe.人工审核结果 == conditionstr)]
+        elif (conditionstr == "AI通过"):
+            dataframe = dataframe[(dataframe.AI审核结果 == "通过")]
+        elif (conditionstr == "AI不通过"):
+            dataframe = dataframe[(dataframe.AI审核结果 == "不通过")]
+        else:
+            pass
+
+    retlist = dataframe.values.tolist()
+    # print(retlist)
+    return retlist
+
+
+# 筛选xlsxname里面的数据，返回筛选后的结果，一个二维数组
+# 适用于我的工单界面，和上一个不一样
+def ScreenData1(xlsxname, *args):
+    pd.set_option("display.unicode.ambiguous_as_wide", True)
+    pd.set_option("display.unicode.east_asian_width", True)
+    dataframe = pd.read_excel(path + xlsxname, usecols=['工单ID', '工单类型', '文件来源', '工单状态', 'AI审核结果', '人工审核结果'], dtype=str)
+    # retlist = dataframe.values.tolist()
+    # print(retlist)
+    for conditionstr in args:
+        if (conditionstr == "文本" or conditionstr == "图片" or conditionstr == "视频"):
+            dataframe = dataframe[(dataframe.工单类型 == conditionstr)]
+        elif (conditionstr == "mht" or conditionstr == "默认"):
+            dataframe = dataframe[(dataframe.文件来源 == conditionstr)]
+        elif (conditionstr == "一级审核中" or conditionstr == "二级审核中"):
             dataframe = dataframe[(dataframe.工单状态 == conditionstr)]
         elif (conditionstr == "通过" or conditionstr == "不通过"):
             dataframe = dataframe[(dataframe.人工审核结果 == conditionstr)]

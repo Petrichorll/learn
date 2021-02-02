@@ -30,12 +30,12 @@ class MyOrder_Query(unittest.TestCase):
     # details_orderid_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[1]/div[1]/span[2]"  # 详情页工单ID的xpath
     # details_auditlog_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[1]/div[2]/div/p[1]/span[{}]"  # 详情页审核日志xpath
     # details_back_xpath = "/html/body/div/div/div[2]/section/section/div/div/div[1]/div[1]/div[2]/button"  # 详情页面的返回按钮
-    #
-    # ordetype_sdp_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[3]/div[2]/table/thead/tr/th[{}]/div/div/i"  # 筛选列下拉框
-    # option_xpath = "/html/body/ul[{}]/li[{}]"
-    #
-    # search_input_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/input"
-    # search_button_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/span/span/i"
+
+    ordetype_sdp_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[3]/div[2]/table/thead/tr/th[{}]/div/div/i"  # 筛选列下拉框
+    option_xpath = "/html/body/ul[{}]/li[{}]"
+
+    search_input_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/input"
+    search_button_xpath = "//*[@id='app']/div/div[2]/section/section/div/div/div/div/div[1]/div/div/span/span/i"
 
     def setUp(self):
         self.driver = login.Login_CAS.login()
@@ -200,22 +200,22 @@ class MyOrder_Query(unittest.TestCase):
         driver = MyOrder_Query.OpenMyOrderQuery(driver)
         time.sleep(1)
         # 遍历工单查询列表，把查到的工单ID、工单类型、文件来源、工单状态、AI审核结果、人工审核结果填入screen_elements_list
-        screen_elements_list = Work_Order_Query.TraverseList(driver, 1)
-        search_data = ['', '5', '组织', 'haus']  # 搜索框要输入的字段，分别对应：1.不输入字；2.输入一个字；3.输入多个字；4.输入不存在的字，这四个用例
+        screen_elements_list = MyOrder_Query.TraverseList(driver)
+        search_data = ['', '3', '52', 'haus']  # 搜索框要输入的字段，分别对应：1.不输入字；2.输入一个字；3.输入多个字；4.输入不存在的字，这四个用例
 
         # 遍历搜索数据，把搜索数据填入搜索框，进行检查
         for sdata in search_data:
-            driver.find_element_by_xpath(Work_Order_Query.search_input_xpath).clear()
-            driver.find_element_by_xpath(Work_Order_Query.search_input_xpath).send_keys(sdata)
-            driver.find_element_by_xpath(Work_Order_Query.search_button_xpath).click()
+            driver.find_element_by_xpath(MyOrder_Query.search_input_xpath).clear()
+            driver.find_element_by_xpath(MyOrder_Query.search_input_xpath).send_keys(sdata)
+            driver.find_element_by_xpath(MyOrder_Query.search_button_xpath).click()
 
             # 遍历工单查询列表，把查到的工单ID、工单类型、文件来源、工单状态、AI审核结果、人工审核结果填入screen_elements_list
             time.sleep(1)
-            seeked_elements_list = Work_Order_Query.TraverseList(driver, 1)
+            seeked_elements_list = MyOrder_Query.TraverseList(driver)
             # 遍历所有screen_elements_list元素，预计应该查到的数据，填入hope_elements_list列表
             hope_elements_list = []
             for adata in screen_elements_list:
-                if (re.search(sdata, adata[0]) or re.search(sdata, adata[6])):
+                if (re.search(sdata, adata[0])):
                     hope_elements_list.append(adata)
 
             # 比较seeked_elements_list和hope_elements_list，如有误，则测试不通过
@@ -230,85 +230,82 @@ class MyOrder_Query(unittest.TestCase):
     def test_Work_Order_Screen(self):
         driver = self.driver
         # 打开工单查询页面
-        driver = Work_Order_Query.OpenOrderQuery(driver)
+        driver = MyOrder_Query.OpenMyOrderQuery(driver)
         # 清空workorderquery.xlsx文件，以便填入。
         workxlsx.cleandata("workorderquery.xlsx")
         # 遍历工单查询列表，把查到的工单ID、工单类型、文件来源、工单状态、AI审核结果、人工审核结果填入workorderquery.xlsx文件
-        screen_elements_list = Work_Order_Query.TraverseList(driver)
+        screen_elements_list = MyOrder_Query.TraverseList(driver)
         workxlsx.writedata("workorderquery.xlsx", screen_elements_list)
         # 点击工单类型过滤菜单，筛选文本，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "文本")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "文本")
         # 点击工单类型过滤菜单，筛选视频，默认...并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "视频", "默认", "AI通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "视频", "默认", "AI通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "视频", "默认", "AI不通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "视频", "默认", "AI不通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "mht")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "mht")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "mht", "AI不通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "mht", "AI不通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "二级审核完成")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "二级审核中")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "一级审核完成", "通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "一级审核中", "通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "二级审核完成", "通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "二级审核中", "通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "二级审核完成", "不通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "二级审核中", "不通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "图片", "mht", "一级审核完成", "AI不通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "图片", "mht", "一级审核中", "AI不通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "图片")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "图片")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "图片", "mht")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "图片", "mht")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "图片", "mht", "二级审核完成", "AI不通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "图片", "mht", "二级审核中", "AI不通过")
         # 点击工单类型过滤菜单，筛选条件为参数，并在查询后比较
-        driver = Work_Order_Query.ScreenAndComparOrder(driver, "图片", "mht", "二级审核完成", "AI通过", "通过")
+        driver = MyOrder_Query.ScreenAndComparOrder(driver, "图片", "mht", "二级审核中", "AI通过", "通过")
 
         time.sleep(1000)
         driver.close()
 
     @staticmethod
     def ScreenAndComparOrder(driver, *args):  # 筛选和对比工单
-        driver = Work_Order_Query.OpenOrderQuery(driver)  # 重新打开工单查询界面
+        driver = MyOrder_Query.OpenMyOrderQuery(driver)  # 重新打开工单查询界面
+        time.sleep(0.5)
         i = 0
         for conditionstr in args:
             i = i + 1
             if (conditionstr == "图片"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 4, i, 2)
+                driver = MyOrder_Query.ClickFilterWP(driver, 4, i, 2)
             elif (conditionstr == "文本"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 4, i, 3)
+                driver = MyOrder_Query.ClickFilterWP(driver, 4, i, 3)
             elif (conditionstr == "视频"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 4, i, 4)
+                driver = MyOrder_Query.ClickFilterWP(driver, 4, i, 4)
             elif (conditionstr == "默认"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 5, i, 2)
+                driver = MyOrder_Query.ClickFilterWP(driver, 5, i, 2)
             elif (conditionstr == "mht"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 5, i, 3)
-            elif (conditionstr == "待审核"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 7, i, 2)
-            elif (conditionstr == "机器审核完成"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 7, i, 3)
-            elif (conditionstr == "一级审核完成"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 7, i, 4)
-            elif (conditionstr == "二级审核完成"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 7, i, 5)
+                driver = MyOrder_Query.ClickFilterWP(driver, 5, i, 3)
+            elif (conditionstr == "一级审核中"):
+                driver = MyOrder_Query.ClickFilterWP(driver, 7, i, 2)
+            elif (conditionstr == "二级审核中"):
+                driver = MyOrder_Query.ClickFilterWP(driver, 7, i, 3)
             elif (conditionstr == "AI通过"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 8, i, 2)
+                driver = MyOrder_Query.ClickFilterWP(driver, 8, i, 2)
             elif (conditionstr == "AI不通过"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 8, i, 3)
+                driver = MyOrder_Query.ClickFilterWP(driver, 8, i, 3)
             elif (conditionstr == "通过"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 9, i, 2)
+                driver = MyOrder_Query.ClickFilterWP(driver, 9, i, 2)
             elif (conditionstr == "不通过"):
-                driver = Work_Order_Query.ClickFilterWP(driver, 9, i, 3)
+                driver = MyOrder_Query.ClickFilterWP(driver, 9, i, 3)
             else:
                 pass
-        screen_elements_list = Work_Order_Query.TraverseList(driver)
+        screen_elements_list = MyOrder_Query.TraverseList(driver)
         # 取保存的数据，筛选，比对
-        se_list = workxlsx.ScreenData("workorderquery.xlsx", *args)
+        se_list = workxlsx.ScreenData1("workorderquery.xlsx", *args)
         print("筛选条件为:{}\n网页结果为：{}\n实际结果为：{}".format(args, screen_elements_list, se_list))
         print("结果个数：{}\n\n\n".format(len(se_list)))
         if (se_list != screen_elements_list):
@@ -318,10 +315,10 @@ class MyOrder_Query(unittest.TestCase):
     @staticmethod
     def ClickFilterWP(driver, k, i, j):  # 点击筛选网页
         time.sleep(0.5)
-        driver.find_element_by_xpath(Work_Order_Query.ordetype_sdp_xpath.format(k)).click()
-        time.sleep(0.2)
-        driver.find_element_by_xpath(Work_Order_Query.option_xpath.format(i, j)).click()
-        time.sleep(0.3)
+        driver.find_element_by_xpath(MyOrder_Query.ordetype_sdp_xpath.format(k)).click()
+        time.sleep(0.4)
+        driver.find_element_by_xpath(MyOrder_Query.option_xpath.format(i, j)).click()
+        time.sleep(0.8)
         return driver
 
     @staticmethod
@@ -355,7 +352,7 @@ class MyOrder_Query(unittest.TestCase):
         return order_id
 
     @staticmethod
-    def TraverseList(driver, personincharge=0):  # 遍历列表，返回查到元素的一个二维数组,personincharge参数表示是否把负责人这一列加入返回列表
+    def TraverseList(driver):  # 遍历列表，返回查到元素的一个二维数组,personincharge参数表示是否把负责人这一列加入返回列表
         time.sleep(1)
         ret_list = []
         i = 1
@@ -363,24 +360,22 @@ class MyOrder_Query(unittest.TestCase):
             one_row_list = []
             try:
                 driver.implicitly_wait(1)
-                one_row_list.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 2)).text)
-                one_row_list.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 4)).text)
-                one_row_list.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 5)).text)
-                one_row_list.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 7)).text)
-                one_row_list.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 8)).text)
-                one_row_list.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 9)).text)
-                if (personincharge):
-                    one_row_list.append(driver.find_element_by_xpath(Work_Order_Query.dataxpath.format(i, 6)).text)
+                one_row_list.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 2)).text)
+                one_row_list.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 4)).text)
+                one_row_list.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 5)).text)
+                one_row_list.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 7)).text)
+                one_row_list.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 8)).text)
+                one_row_list.append(driver.find_element_by_xpath(MyOrder_Query.dataxpath.format(i, 9)).text)
                 driver.implicitly_wait(30)
             except:
                 driver.implicitly_wait(30)
                 break
             ret_list.append(one_row_list)
             if (i == 10):
-                hstr = driver.find_element_by_xpath(Work_Order_Query.nextpage_xpath).get_attribute('outerHTML')
+                hstr = driver.find_element_by_xpath(MyOrder_Query.nextpage_xpath).get_attribute('outerHTML')
                 if (re.findall("disabled", hstr)):
                     break
-                driver.find_element_by_xpath(Work_Order_Query.nextpage_xpath).click()
+                driver.find_element_by_xpath(MyOrder_Query.nextpage_xpath).click()
                 time.sleep(1)
                 i = 0
             i = i + 1
