@@ -7,13 +7,10 @@ from single_link_list import Node
 
 
 class Queue(object):  # 队列
-    def __init__(self, node=None):
-        if (node):
-            self.__count = 1
-        else:
-            self.__count = 0
-        self.__head = node
-        self.__tail = node  # 尾指针
+    def __init__(self):
+        self.__count = 0
+        self.__head = None
+        self.__tail = None  # 尾指针
 
     def is_empty(self):  # 返回队列是否为空
         return self.__head is None
@@ -100,7 +97,7 @@ if __name__ == "__main__":
     print(listt.peek())
 
     a = Node(7)
-    listt = Queue(a)
+    listt = Queue()
 
     print(listt.length())
     listt.travel()
