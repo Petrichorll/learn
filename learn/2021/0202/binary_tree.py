@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import queue, stack, time
+import queue_c, stack, time
 
 
 class Node(object):  # 节点
@@ -17,14 +17,14 @@ class BinaryTree(object):  # 二叉树
         else:
             node = Node(list[0])
             self.__root = node
-            q = queue.Queue()
+            q = queue_c.Queue()
             q.enqueue(node)
-            # q.travel()
-            # print(q.peek())
+
             i = 0
             while (i < len(list) - 1):
                 i = i + 1
                 node = Node(list[i])
+
                 if (q.peek().left == None):
                     q.peek().left = node
                     q.enqueue(node)
@@ -60,10 +60,11 @@ class BinaryTree(object):  # 二叉树
     def travel(self):  # 层序遍历并打印出二叉树
         if (self.__root == None):
             print(None)
-        q = queue.Queue()
+            return
+        q = queue_c.Queue()
         q.enqueue(self.__root)
         while (q.is_empty() == False):
-            print(q.peek().elem)
+            print(q.peek().elem, end=" | ")
             if (q.peek().left == None):
                 pass
             else:
@@ -82,7 +83,7 @@ class BinaryTree(object):  # 二叉树
             root = self.__root
         if (root == None):
             return
-        print(root.elem)
+        print(root.elem, end=" | ")
         self.DLR_travel_d(root.left)
         self.DLR_travel_d(root.right)
 
@@ -93,28 +94,125 @@ class BinaryTree(object):  # 二叉树
         if (root == 1):
             root = self.__root
 
+        t = root
+        stmp = stack.Stack()
+        stmp.push(t)
+
+        while (not stmp.is_empty()):
+            while (t is not None):
+                stmp.push(t)
+                print(t.elem, end=" | ")
+                t = t.left
+            t = stmp.top()
+            stmp.pop()
+            t = t.right
+
+    def LDR_travel_d(self, root=1):  # 中序(左根右)遍历二叉树。递归。
+        if (None == self.__root and root == 1):
+            print(None)
+            return
+        if (root == 1):
+            root = self.__root
+        if (root == None):
+            return
+        self.LDR_travel_d(root.left)
+        print(root.elem, end=" | ")
+        self.LDR_travel_d(root.right)
+
+    def LDR_travel_fd(self, root=1):  # 中序(左根右)遍历二叉树。非递归。
+        if (None == self.__root and root == 1):
+            print(None)
+            return
+        if (root == 1):
+            root = self.__root
+
+        t = root
+        stmp = stack.Stack()
+        stmp.push(t)
+
+        while (not stmp.is_empty()):
+            while (t is not None):
+                stmp.push(t)
+                t = t.left
+            t = stmp.top()
+            stmp.pop()
+            if (not stmp.is_empty()):
+                print(t.elem, end=" | ")
+            t = t.right
+
+    def LRD_travel_d(self, root=1):  # 后序(左右根)遍历二叉树。递归。
+        if (None == self.__root and root == 1):
+            print(None)
+            return
+        if (root == 1):
+            root = self.__root
+        if (root == None):
+            return
+        self.LRD_travel_d(root.left)
+        self.LRD_travel_d(root.right)
+        print(root.elem, end=" | ")
+
+    def LRD_travel_fd(self, root=1):  # 后序(左右根)遍历二叉树。非递归。
+        if (None == self.__root and root == 1):
+            print(None)
+            return
+        if (root == 1):
+            root = self.__root
+
+        t = root
         stmp = stack.Stack()
         stag = stack.Stack()
-        stmp.push(root)
+        stmp.push(t)
         stag.push(0)
-        while (stmp.is_empty() == False):
-            print(stmp.top().elem)
-            while (stmp.top().left != None and stag.top() == 0):
-                stmp.push(stmp.top().left)
-                stag.push(0)
-            if (stmp.top().right == None):
-                stmp.pop()
-                stag.pop()
+        while (not stmp.is_empty()):
+            t = stmp.top()
+            if (stag.top() == 0):
                 stag.pop()
                 stag.push(1)
-            else:
-                if (stag.top() == 0):
-                    stmp.push(stmp.top().right)
-                    stag.pop()
-                    stag.push(1)
+                if (t.right is not None):
+                    stmp.push(t.right)
                     stag.push(0)
+                if (t.left is not None):
+                    stmp.push(t.left)
+                    stag.push(0)
+            else:
+                print(stmp.top().elem, end=" | ")
+                stmp.pop()
+                stag.pop()
+
+    def cg(self):
+        # node = self.__root
+        # node = node.left
+        # node.left = None
+        #
+        # node = self.__root
+        # node = node.right
+        # node.left = None
+        #
+        # self.__root=None
+        self.__root.right = None
+        self.__root.left.right = None
+        self.__root.left.left.right = None
 
 
 if __name__ == "__main__":
-    treee = BinaryTree([8, 2, 3, 4, 5, 6, 7])
+    treee = BinaryTree([8, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12])
+
+    #treee.cg()
+    print("层序遍历==========", end="\n| ")
+    treee.travel()
+
+    print("\n前序遍历递归==========", end="\n| ")
+    treee.DLR_travel_d()
+    print("\n前序遍历非递归==========", end="\n| ")
     treee.DLR_travel_fd()
+
+    print("\n中序遍历递归==========", end="\n| ")
+    treee.LDR_travel_d()
+    print("\n中前序遍历非递归==========", end="\n| ")
+    treee.LDR_travel_fd()
+
+    print("\n后序遍历递归==========", end="\n| ")
+    treee.LRD_travel_d()
+    print("\n后序遍历非递归==========", end="\n| ")
+    treee.LRD_travel_fd()
