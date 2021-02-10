@@ -15,7 +15,7 @@ class Queue(object):  # 队列
     def is_empty(self):  # 返回队列是否为空
         return self.__head is None
 
-    def length(self):  # 返回队列里的元素个数
+    def size(self):  # 返回队列里的元素个数
         return self.__count
 
     def travel(self):  # 遍历整个队列   测试用

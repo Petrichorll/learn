@@ -4,7 +4,7 @@
 from single_link_list import Node
 
 
-class SingleLinkList(object):  # 单链表
+class SingleLinkList(object):  # 单向循环链表
     def __init__(self, node=None):
         self.__head = node
 
