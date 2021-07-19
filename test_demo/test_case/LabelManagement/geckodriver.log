@@ -2433,3 +2433,9 @@ JavaScript error: http://ai5.gemfield.org/static/js/app.8f192bc2.js, line 1: Err
 
 ###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
 
+1618480376477	geckodriver	INFO	Listening on 127.0.0.1:4032
+1618480379516	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\19144\\AppData\\Local\\Temp\\rust_mozprofile3sXwkx"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1618480384103	Marionette	INFO	Listening on port 4040
+1618480384395	Marionette	WARN	TLS certificate errors will be ignored for this session

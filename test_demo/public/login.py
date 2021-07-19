@@ -94,7 +94,7 @@ class Login_CAS(unittest.TestCase):
             driver.find_element_by_xpath("/html/body/div/div/form/button").click()
             time.sleep(2)
             # driver.refresh()  # 刷新一下页面，8月18号执行时，页面没有自动刷新，所以添加了这一句，其它脚本可能也需要用上
-        if (i == 1):
+        elif (i == 1):
             driver = webdriver.Firefox()
             driver.get(url)
             driver.maximize_window()
