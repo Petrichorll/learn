@@ -88,6 +88,9 @@ class SingleLinkList(object):  # 单链表
     def clean_list(self):  # 清空链表
         self.__head = None
 
+    def get_head(self):
+        return self.__head
+
 
 if __name__ == "__main__":
     listt = SingleLinkList()
