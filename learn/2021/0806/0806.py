@@ -31,15 +31,24 @@ while(i < 100):
 print(yyl)
 ukk = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 i = 0
+# while(i < 99):
+#     j=0
+#     while(j<12):
+#         if(yyl[i]>0.5*j and yyl[i]<0.5*(j+1)):
+#             ukk[j]=ukk[j]+1
+#         j=j+1
+#     i = i+1
+
 while(i < 99):
     j=0
-    while(j<12):
-        if(yyl[i]>0.5*j and yyl[i]<0.5*(j+1)):
+    while(j<10):
+        if(yyl[i]>0.01*j+3.9 and yyl[i]<0.01*(j+1))+3.9:
             ukk[j]=ukk[j]+1
         j=j+1
     i = i+1
+
 print(ukk)
 
 
-plt.bar(range(len(yyl)), yyl)
+plt.bar(range(len(ukk)), ukk)
 plt.show()
