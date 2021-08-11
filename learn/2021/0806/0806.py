@@ -29,8 +29,8 @@ while(i < 100):
     i = i+1
 
 print(yyl)
-ukk = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-i = 0
+# ukk = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+# i = 0
 # while(i < 99):
 #     j=0
 #     while(j<12):
@@ -38,12 +38,15 @@ i = 0
 #             ukk[j]=ukk[j]+1
 #         j=j+1
 #     i = i+1
-
+ll=0.01
+ukk = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0]
+i = 0
 while(i < 99):
     j=0
-    while(j<10):
-        if(yyl[i]>0.01*j+3.9 and yyl[i]<0.01*(j+1))+3.9:
+    while(j<20):
+        if(yyl[i]>ll*j+2.4 and yyl[i]<ll*(j+1)+2.4):
             ukk[j]=ukk[j]+1
+            break
         j=j+1
     i = i+1
 
