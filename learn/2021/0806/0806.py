@@ -1,5 +1,6 @@
 import re
 import datetime
+import numpy
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 
@@ -38,20 +39,25 @@ print(yyl)
 #             ukk[j]=ukk[j]+1
 #         j=j+1
 #     i = i+1
-ll=0.01
-ukk = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0]
+ll = 0.5
+mm = 0
+ukk = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+# nkk = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+# i=0
+# while(i<len(nkk)):
+#     nkk[i]=ll*i+mm
+#     i=i+1
 i = 0
 while(i < 99):
-    j=0
-    while(j<20):
-        if(yyl[i]>ll*j+2.4 and yyl[i]<ll*(j+1)+2.4):
-            ukk[j]=ukk[j]+1
+    j = 0
+    while(j < 20):
+        if(yyl[i] > ll*j+mm and yyl[i] < ll*(j+1)+mm):
+            ukk[j] = ukk[j]+1
             break
-        j=j+1
+        j = j+1
     i = i+1
 
 print(ukk)
-
-
+print(range(0, 20))
 plt.bar(range(len(ukk)), ukk)
 plt.show()
