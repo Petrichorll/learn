@@ -2,11 +2,11 @@ import requests,re
 
 from requests.models import DecodeError
 
-i=562
+i=37
 while(i<1000):
     i=i+1
     
-    fh="IPX-{0:03d}".format(i)
+    fh="SSPD-{0:03d}".format(i)
     print(fh)
 
     reb = requests.get("https://xslist.org/search?query={}&lg=en".format(fh))
